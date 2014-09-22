@@ -6,6 +6,7 @@ from libcpp.vector cimport vector
 from libcpp.set cimport set
 from posix.types cimport off_t
 from cpython cimport bool
+# from cython.operator cimport dereference as deref, reference as ref
 cimport bindings
 import modes
 import log_level
@@ -100,10 +101,10 @@ cdef class RadosFsDir:
     def remove(self):
         RadosFsException.check(self._cpp_rados_fs_dir.remove())
 
-    def entry_list(self):
-        cdef set[string] entries
-        RadosFsException.check(self._cpp_rados_fs_dir.entryList(entries))
-        return entries
+    def entries(self):
+        cdef set[string] _entries
+        RadosFsException.check(self._cpp_rados_fs_dir.entryList(_entries))
+        return _entries
 
     def entry(self, int index):
         cdef string cpp_entry = string()
@@ -118,6 +119,9 @@ cdef class RadosFsDir:
 
     def is_readable(self):
         return self._cpp_rados_fs_dir.isReadable()
+
+    def update(self):
+        self._cpp_rados_fs_dir.update()
 
 
 cdef class RadosFsFile:
@@ -140,16 +144,20 @@ cdef class RadosFsFile:
         RadosFsException.check(self._cpp_rados_fs_file.writeSync(buf, <long>offset, length))
 
     def create(self, int permissions=-1, str pool=""):
-        self._cpp_rados_fs_file.create(permissions, pool)
+        RadosFsException.check(self._cpp_rados_fs_file.create(permissions, pool))
+        return self
 
     def remove(self):
-        self._cpp_rados_fs_file.remove()
+        RadosFsException.check(self._cpp_rados_fs_file.remove())
 
     def truncate(self, size):
-        self._cpp_rados_fs_file.truncate(size)
+        RadosFsException.check(self._cpp_rados_fs_file.truncate(size))
 
     def is_readable(self):
         return self._cpp_rados_fs_file.isReadable()
 
     def is_writable(self):
         return self._cpp_rados_fs_file.isWritable()
+
+    def update(self):
+        self._cpp_rados_fs_file.update()
