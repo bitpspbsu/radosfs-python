@@ -3,7 +3,19 @@
 
 __author__ = 'dima'
 
-NONE = 0
-DEBUG = 1
 
-_LOG_LEVELS = set([NONE, DEBUG])
+class LogLevel(object):
+    def __init__(self, str_level, int_level):
+        self._str_level = str_level
+        self._int_level = int_level
+
+    def get_level(self):
+        return self._int_level
+
+    def __str__(self):
+        return "LogLevel: " + self._str_level
+
+    __repr__ = __str__
+
+LogLevel.NONE = LogLevel("NONE", 0)
+LogLevel.DEBUG = LogLevel("DEBUG", 1)

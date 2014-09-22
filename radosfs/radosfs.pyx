@@ -1,15 +1,14 @@
 # -*- coding: utf8
 
-from radosfs_exception import RadosFsException
 from libcpp.string cimport string
-from libcpp.vector cimport vector
 from libcpp.set cimport set
 from posix.types cimport off_t
 from cpython cimport bool
-# from cython.operator cimport dereference as deref, reference as ref
 cimport bindings
-import modes
-import log_level
+
+include "log_level.py"
+include "radosfs_exception.py"
+include "open_mode.py"
 
 __author__ = 'dima'
 
@@ -69,20 +68,18 @@ cdef class RadosFs:
         return fs_dir
 
     def file(self, bytes path, int _mode):
-        if _mode not in modes._MODES:
-            raise ValueError("mode must be valid, see modes.py")
         fs_file = RadosFsFile()
-        (<RadosFsFile>fs_file).__setup__(new bindings.RadosFsFile(self._cpp_rados_fs, path, <bindings.OpenMode> _mode))
+        cdef int int_mode = _mode.get_mode()
+        (<RadosFsFile>fs_file).__setup__(new bindings.RadosFsFile(self._cpp_rados_fs, path, <bindings.OpenMode> int_mode))
         return fs_file
 
     #
     # ETC
     #
 
-    def set_log_level(self, int _log_level):
-        if _log_level not in log_level:
-            raise ValueError("invalid log_level, see log_level.py")
-        self._cpp_rados_fs.setLogLevel(<bindings.LogLevel> _log_level)
+    def set_log_level(self, _log_level):
+        cdef int int_level = _log_level.get_level()
+        self._cpp_rados_fs.setLogLevel(<bindings.LogLevel> int_level)
 
     def __dealloc__(self):
         del self._cpp_rados_fs
@@ -131,7 +128,7 @@ cdef class RadosFsFile:
         self._cpp_rados_fs_file = cpp_rados_fs_file
 
     def mode(self):
-        return self._cpp_rados_fs_file.mode()
+        return OpenMode.from_code(self._cpp_rados_fs_file.mode())
 
     def read(self, offset, int length):
         cdef char* buf = NULL
