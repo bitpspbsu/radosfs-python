@@ -4,6 +4,6 @@
 __author__ = 'dima'
 
 NONE = 0
-READ = 1 << 0
-WRITE = 1 << 1
-READ_WRITE = READ | WRITE
+DEBUG = 1
+
+_LOG_LEVELS = set([NONE, DEBUG])

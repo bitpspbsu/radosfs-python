@@ -1,21 +1,25 @@
 # -*- coding: utf8
 # distutils: language = c++
 from libcpp.string cimport string
+from libcpp.vector cimport vector
+from libcpp.set cimport set
 from libcpp cimport bool
 from posix.stat cimport struct_stat as stat
 
 __author__ = 'dima'
 
 cdef extern from "libradosfs.hh" namespace "radosfs":
-    cdef cppclass RadosFs:
+    cppclass RadosFs:
         RadosFs() except +
         int init(string, string)
-        int addPool(string, string, int)
-        string poolPrefix(string)
-        string poolFromPrefix(string)
-        int poolSize(string)
+        int addDataPool(string, string, int)
+        int removeDataPool(string)
+        vector[string] dataPools(string)
+        string dataPoolPrefix(string)
+        int dataPoolSize(string)
+        void setLogLevel(LogLevel)
 
-    cdef cppclass RadosFsDir:
+    cppclass RadosFsDir:
         RadosFsDir(RadosFs*, string, bool) except +
         int remove()
         int create(int, boolean, int, int)
@@ -32,13 +36,13 @@ cdef extern from "libradosfs.hh" namespace "radosfs":
         int removeMetadata(string, string)
         int find(set[string], args)
 
-    cdef cppclass RadosFsFile:
-        RadosFsFile(RadoseFs, string, OpenMode)
+    cppclass RadosFsFile:
+        RadosFsFile(RadosFs*, string, OpenMode) except +
         OpenMode mode()
-        ssize_t read(char*, off_t, size_t)
-        ssize_t write(char*, off_t, size_t)
-        ssize_t writeSync(char*, off_t, size_t)
-        int create(int)
+        ssize_t read(char*, long, size_t)
+        ssize_t write(char*, long, size_t)
+        ssize_t writeSync(char*, long, size_t)
+        int create(int, string)
         int remove()
         int truncate(unsigned long long size)
         bool isWritable()
@@ -47,6 +51,15 @@ cdef extern from "libradosfs.hh" namespace "radosfs":
         void setPath(string)
         int stat(stat*)
 
-cdef extern from "libradosfs.hh" namespace "radosfs.RadosFsFile":
-    cdef enum OpenMode:
-        MODE_NONE, MODE_READ, MODE_WRITE, MODE_READ_WRITE
+cdef extern from "libradosfs.hh" namespace "radosfs::RadosFs":
+    ctypedef enum LogLevel:
+        LOG_LEVEL_NONE
+        LOG_LEVEL_DEBUG
+
+
+cdef extern from "libradosfs.hh" namespace "radosfs::RadosFsFile":
+    ctypedef enum OpenMode:
+        MODE_NONE
+        MODE_READ
+        MODE_WRITE
+        MODE_READ_WRITE

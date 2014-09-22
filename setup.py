@@ -11,7 +11,7 @@ setup(
     cmdclass = {'build_ext': build_ext},
     ext_modules = [
         Extension("radosfs",
-                  sources=["radosfs/main.pyx"],
+                  sources=["radosfs/radosfs.pyx"],
                   libraries=["radosfs"],
                   language="c++",
              )
