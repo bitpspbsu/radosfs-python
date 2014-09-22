@@ -61,7 +61,6 @@ cdef extern from "libradosfs.hh" namespace "radosfs::RadosFs":
         LOG_LEVEL_NONE
         LOG_LEVEL_DEBUG
 
-
 cdef extern from "libradosfs.hh" namespace "radosfs::RadosFsFile":
     ctypedef enum OpenMode:
         MODE_NONE
