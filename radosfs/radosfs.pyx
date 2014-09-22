@@ -40,6 +40,25 @@ cdef class RadosFs:
         return self._cpp_rados_fs.dataPoolSize(pool_name)
 
     #
+    # METADATA POOLS
+    #
+
+    def add_metadata_pool(self, bytes name, bytes prefix):
+        RadosFsException.check(self._cpp_rados_fs.addMetadataPool(name, prefix))
+
+    def remove_metadata_pool(self, bytes name):
+        RadosFsException.check(self._cpp_rados_fs.removeMetadataPool(name))
+
+    def metadata_pools(self):
+        return self._cpp_rados_fs.metadataPools()
+
+    def metadata_pool_prefix(self, bytes pool):
+        return self.metadata_pool_prefix(pool)
+
+    def metadata_pool_from_prefix(self, bytes prefix):
+        return self.metadata_pool_prefix(prefix)
+
+    #
     # FS ACTIONS
     #
 
@@ -48,11 +67,11 @@ cdef class RadosFs:
         (<RadosFsDir>fs_dir).__setup__(new bindings.RadosFsDir(self._cpp_rados_fs, path, cacheable))
         return fs_dir
 
-    def file(self, bytes path, int mode):
-        if mode not in mode._MODES:
+    def file(self, bytes path, int _mode):
+        if _mode not in modes._MODES:
             raise ValueError("mode must be valid, see modes.py")
         fs_file = RadosFsFile()
-        (<RadosFsFile>fs_file).__setup__(new bindings.RadosFsFile(self._cpp_rados_fs, path, <bindings.OpenMode> mode))
+        (<RadosFsFile>fs_file).__setup__(new bindings.RadosFsFile(self._cpp_rados_fs, path, <bindings.OpenMode> _mode))
         return fs_file
 
     #

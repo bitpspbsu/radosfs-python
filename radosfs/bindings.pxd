@@ -17,6 +17,11 @@ cdef extern from "libradosfs.hh" namespace "radosfs":
         vector[string] dataPools(string)
         string dataPoolPrefix(string)
         int dataPoolSize(string)
+        int addMetadataPool(string, string)
+        int removeMetadataPool(string)
+        vector[string] metadataPools()
+        string metadataPoolPrefix(string)
+        string metadataPoolFromPrefix(string)
         void setLogLevel(LogLevel)
 
     cppclass RadosFsDir:
