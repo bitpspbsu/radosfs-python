@@ -67,7 +67,7 @@ cdef class RadosFs:
         (<RadosFsDir>fs_dir).__setup__(new bindings.RadosFsDir(self._cpp_rados_fs, path, cacheable))
         return fs_dir
 
-    def file(self, bytes path, int _mode):
+    def file(self, bytes path, _mode):
         fs_file = RadosFsFile()
         cdef int int_mode = _mode.get_mode()
         (<RadosFsFile>fs_file).__setup__(new bindings.RadosFsFile(self._cpp_rados_fs, path, <bindings.OpenMode> int_mode))

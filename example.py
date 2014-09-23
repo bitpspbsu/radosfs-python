@@ -6,11 +6,11 @@ __author__ = 'dima'
 import radosfs
 from sys import argv
 
-username = argv[0]
-ceph_conf = argv[1]
+username = argv[1]
+ceph_conf = argv[2]
 
-data_pool = argv[2]
-metadata_pool = argv[3]
+data_pool = argv[3]
+metadata_pool = argv[4]
 
 
 fs = radosfs.RadosFs(username, ceph_conf)
