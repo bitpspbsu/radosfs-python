@@ -4,7 +4,9 @@ from libcpp.string cimport string
 from libcpp.set cimport set
 from posix.types cimport off_t
 from cpython cimport bool
+from libc.stdlib cimport malloc, free
 cimport bindings
+cimport cython
 
 include "log_level.py"
 include "radosfs_exception.py"
@@ -131,8 +133,10 @@ cdef class RadosFsFile:
         return OpenMode.from_code(self._cpp_rados_fs_file.mode())
 
     def read(self, offset, length):
-        cdef char* buf = NULL
-        self._cpp_rados_fs_file.read(buf, <long>offset, <size_t>length)
+        cdef char* buf = <char*>malloc((<int>length + 1)*cython.sizeof(char))
+        cdef long cpp_offset = offset
+        cdef long cpp_length = length
+        self._cpp_rados_fs_file.read(buf, cpp_offset, cpp_length)
         return buf
 
     def write(self, bytes buf, offset=0, length=None):
