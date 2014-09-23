@@ -130,15 +130,18 @@ cdef class RadosFsFile:
     def mode(self):
         return OpenMode.from_code(self._cpp_rados_fs_file.mode())
 
-    def read(self, offset, int length):
+    def read(self, offset, length):
         cdef char* buf = NULL
-        self._cpp_rados_fs_file.read(buf, <off_t>offset, length)
+        self._cpp_rados_fs_file.read(buf, <long>offset, <size_t>length)
         return buf
 
     def write(self, bytes buf, offset=0, length=None):
+        cdef long cpp_length
         if length is None:
-            length = len(buf)
-        RadosFsException.check(self._cpp_rados_fs_file.writeSync(buf, <long>offset, length))
+            cpp_length = len(buf)
+        else:
+            cpp_length = length
+        RadosFsException.check(self._cpp_rados_fs_file.writeSync(buf, <long>offset, cpp_length))
 
     def create(self, int permissions=-1, str pool=""):
         RadosFsException.check(self._cpp_rados_fs_file.create(permissions, pool))

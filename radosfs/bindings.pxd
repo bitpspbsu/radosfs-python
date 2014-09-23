@@ -45,8 +45,8 @@ cdef extern from "libradosfs.hh" namespace "radosfs":
         RadosFsFile(RadosFs*, string, OpenMode) except +
         OpenMode mode()
         ssize_t read(char*, long, size_t)
-        ssize_t write(char*, long, size_t)
-        ssize_t writeSync(char*, long, size_t)
+        int write(char*, long, size_t)
+        int writeSync(char*, long, size_t)
         int create(int, string)
         int remove()
         int truncate(unsigned long long size)
