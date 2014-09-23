@@ -56,6 +56,21 @@ cdef extern from "libradosfs.hh" namespace "radosfs":
         void setPath(string)
         int stat(stat*)
 
+    cppclass RadosFsInfo:
+        bool isWritable()
+        bool isReadable()
+        string path()
+        string setPath()
+        bool isFile()
+        bool isDir()
+        bool exist()
+        void update()
+        bool isLink()
+        int chmod(long)
+        int rename(string)
+        RadosFs* filesystem()
+        void setFilesystem(RadosFs*)
+
 cdef extern from "libradosfs.hh" namespace "radosfs::RadosFs":
     ctypedef enum LogLevel:
         LOG_LEVEL_NONE
