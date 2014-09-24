@@ -8,6 +8,10 @@ from distutils.extension import Extension
 from Cython.Distutils import build_ext
 
 setup(
+    name='RadosFsPython',
+    version='0.0.1',
+    author='Dmitry Batkovich',
+    author_email='batya239@gmail.com',
     cmdclass = {'build_ext': build_ext},
     ext_modules = [
         Extension("radosfs",
@@ -15,5 +19,8 @@ setup(
                   libraries=["radosfs"],
                   language="c++",
              )
-        ]
+        ],
+    license='LICENSE',
+    description='RadosFs Python bindings',
+    long_description=open('README.md').read(),
 )
