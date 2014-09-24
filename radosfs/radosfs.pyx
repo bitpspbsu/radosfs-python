@@ -137,8 +137,8 @@ cdef class RadosFsFile:
         cdef char* buf = <char*>malloc((<int>length + 1)*cython.sizeof(char))
         cdef long cpp_offset = offset
         cdef long cpp_length = length
-        self._cpp_rados_fs_file.read(buf, cpp_offset, cpp_length)
-        return buf
+        length_read = self._cpp_rados_fs_file.read(buf, cpp_offset, cpp_length)
+        return buf[:length_read]
 
     def write(self, bytes buf, offset=0, length=None):
         cdef long cpp_length
