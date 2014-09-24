@@ -137,7 +137,7 @@ cdef class RadosFsFile:
 
     def read(self, offset=0, length=None):
         cdef long buffer_size = length if length is not None else RadosFsFile.BUFFER_SIZE
-        cdef char* buf = <char*>malloc((buffer_size)*cython.sizeof(char))
+        cdef char* buf = <char*>malloc(buffer_size*cython.sizeof(char))
         cdef long cpp_offset = offset
         result_string = ""
         while True:
