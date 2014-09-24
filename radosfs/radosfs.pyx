@@ -103,12 +103,13 @@ cdef class RadosFsDir:
     def entries(self):
         cdef set[string] _entries
         RadosFsException.check(self._cpp_rados_fs_dir.entryList(_entries))
-        return _entries
+        return list(_entries)
 
     def entry(self, int index):
         cdef string cpp_entry = string()
         RadosFsException.check(self._cpp_rados_fs_dir.entry(index, cpp_entry))
-        return <bytes> cpp_entry
+        entry_name = <bytes> cpp_entry
+        return entry_name if len(entry_name) else None
 
     def set_path(self, new_path):
         self._cpp_rados_fs_dir.setPath(new_path)

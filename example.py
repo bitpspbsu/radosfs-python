@@ -28,6 +28,7 @@ print fs.dir("/").entries()
 print fs.dir("/").entry(0)
 print fs.dir("/").entry(1)
 print fs.dir("/").entry(2)
+print fs.dir("/").entry(1000)
 print fs.file("/my.txt", radosfs.OpenMode.READ_WRITE).mode() == radosfs.OpenMode.READ_WRITE
 # fs.file("/my.txt", radosfs.OpenMode.READ_WRITE).remove()
 fs.file("/my1.txt", radosfs.OpenMode.READ_WRITE).remove()
