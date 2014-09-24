@@ -35,4 +35,4 @@ fs.file("/my1.txt", radosfs.OpenMode.READ_WRITE).remove()
 fs.file("/my2.txt", radosfs.OpenMode.READ_WRITE).remove()
 
 f1.write("qwerty", 0)
-print "file content '%s'" % fs.file("/my.txt", radosfs.OpenMode.READ_WRITE).read(0, 1000)
+print "file content '%s'" % fs.file("/my.txt", radosfs.OpenMode.READ_WRITE).read()

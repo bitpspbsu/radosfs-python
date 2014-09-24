@@ -125,6 +125,8 @@ cdef class RadosFsDir:
 
 
 cdef class RadosFsFile:
+    BUFFER_SIZE = 1 << 20
+
     cdef bindings.RadosFsFile* _cpp_rados_fs_file
 
     cdef __setup__(self, bindings.RadosFsFile* cpp_rados_fs_file):
@@ -133,12 +135,18 @@ cdef class RadosFsFile:
     def mode(self):
         return OpenMode.from_code(self._cpp_rados_fs_file.mode())
 
-    def read(self, offset, length):
-        cdef char* buf = <char*>malloc((<int>length + 1)*cython.sizeof(char))
+    def read(self, offset=0, length=None):
+        cdef long buffer_size = length if length is not None else RadosFsFile.BUFFER_SIZE
+        cdef char* buf = <char*>malloc((buffer_size)*cython.sizeof(char))
         cdef long cpp_offset = offset
-        cdef long cpp_length = length
-        length_read = self._cpp_rados_fs_file.read(buf, cpp_offset, cpp_length)
-        return buf[:length_read]
+        result_string = ""
+        while True:
+            length_read = self._cpp_rados_fs_file.read(buf, cpp_offset, buffer_size)
+            result_string += buf[:length_read]
+            if length_read < buffer_size or (length is not None and length_read == buffer_size):
+                break
+            cpp_offset += buffer_size
+        return result_string
 
     def write(self, bytes buf, offset=0, length=None):
         cdef long cpp_length
